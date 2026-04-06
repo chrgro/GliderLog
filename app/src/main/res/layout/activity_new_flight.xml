@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF"
+    tools:context="no.ntnuf.gliderlog.newflight.NewFlightActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarnewtow"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbarnewtow"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/gliderRegistrationTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:text="Glider Registration"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <AutoCompleteTextView
+                android:id="@+id/gliderRegistrationIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/gliderRegistrationTitle"
+                android:capitalize="characters"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:inputType="textCapCharacters"
+                android:nextFocusDown="@+id/pilotNameTitle"
+                android:text="LN-G"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/pilotNameTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/gliderRegistrationIn"
+                android:text="Pilot Name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioGroup
+                android:id="@+id/pilotTypeIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pilotNameTitle"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Pilot In Command" />
+
+                <RadioButton
+                    android:id="@+id/radio_instructor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Instructor" />
+            </RadioGroup>
+
+            <AutoCompleteTextView
+                android:id="@+id/pilotNameIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/pilotTypeIn"
+                android:capitalize="words"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:inputType="textCapWords|textPersonName"
+                android:nextFocusDown="@+id/coPilotNameIn"
+                android:textSize="30sp" />
+
+            <ImageView
+                android:id="@+id/pilotNameCheckmark"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@+id/pilotNameIn"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="15dp" />
+
+            <TextView
+                android:id="@+id/coPilotNameTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/pilotNameCheckmark"
+                android:text="Co-pilot name (optional)"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <RadioGroup
+                android:id="@+id/copilotTypeIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/coPilotNameTitle"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio_student"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Student" />
+
+                <RadioButton
+                    android:id="@+id/radio_passenger"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Passenger" />
+            </RadioGroup>
+
+            <AutoCompleteTextView
+                android:id="@+id/coPilotNameIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/copilotTypeIn"
+                android:capitalize="words"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:inputType="textCapWords|textPersonName"
+                android:nextFocusDown="@+id/notesIn"
+                android:text=""
+                android:textSize="30sp" />
+
+            <ImageView
+                android:id="@+id/copilotNameCheckmark"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignBottom="@+id/coPilotNameIn"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="15dp" />
+
+            <TextView
+                android:id="@+id/notesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/coPilotNameIn"
+                android:text="Additional notes (optional)"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <AutoCompleteTextView
+                android:id="@+id/notesIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/notesTitle"
+                android:capitalize="sentences"
+                android:ems="10"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences"
+                android:text=""
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/timestampsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/notesIn"
+                android:text="Takeoff | Release | Landing"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/takeoffTimeIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/timestampsTitle"
+                android:paddingRight="30dp"
+                android:text="00:00"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/releaseTimeIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/timestampsTitle"
+                android:layout_toRightOf="@+id/takeoffTimeIn"
+                android:paddingRight="30dp"
+                android:text="03:00"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/landingTimeIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="false"
+                android:layout_below="@+id/timestampsTitle"
+                android:layout_toRightOf="@+id/releaseTimeIn"
+                android:text="06:00"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/startTowButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="16dp"
+                android:src="@android:drawable/ic_input_add"
+                android:tint="@color/white" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
+
