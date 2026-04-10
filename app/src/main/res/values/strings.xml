@@ -21,6 +21,6 @@
     <string name="set_time_for">Set %1$s time</string>
     <string name="log_must_be_complete_before_send">All flights must land before log can be sent.</string>
     <string name="failed_to_prepare_email_log">Failed to prepare email log attachment.</string>
-    <string name="summary_sums_nearest">Sums, nearest %1$dm</string>
+    <string name="summary_sums_nearest">Sums\nnearest %1$dm</string>
     <string name="summary_only_landed_notice">Not all flights have landed, only summarizing landed flights.</string>
 </resources>

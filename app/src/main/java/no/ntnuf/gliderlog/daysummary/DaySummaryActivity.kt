@@ -1,6 +1,10 @@
 package no.ntnuf.gliderlog.daysummary
 
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -26,6 +30,7 @@ import no.ntnuf.gliderlog.common.applyToolbarInsets
 import no.ntnuf.gliderlog.common.enableImmersiveFullscreen
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.random.Random
 
 class DaySummaryActivity : AppCompatActivity() {
     private lateinit var daylog: DayLog
@@ -126,13 +131,29 @@ class DaySummaryActivity : AppCompatActivity() {
     private fun addSummaryRow(info: NameRegistrationRole, flightTime: FlightTime): TableRow {
         val row = TableRow(this)
 
-        val nameRoleReg = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        val nameContainer = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+
+        if (!info.isPlane) {
+            val name = info.name.orEmpty()
+            nameContainer.addView(createAvatarView(name))
+        }
+
+        val nameRoleReg = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            lp.gravity = Gravity.CENTER_VERTICAL
+            layoutParams = lp
+        }
         if (!info.isPlane) {
             nameRoleReg.addView(TextView(this).apply { text = info.name.orEmpty() })
-            nameRoleReg.addView(TextView(this).apply { text = info.role?.name ?: "" })
+            nameRoleReg.addView(TextView(this).apply { text = info.role?.toString() ?: "" })
         }
         nameRoleReg.addView(TextView(this).apply { text = info.registration })
-        row.addView(nameRoleReg)
+        nameContainer.addView(nameRoleReg)
+        row.addView(nameContainer)
 
         val labels = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val values = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
@@ -161,6 +182,49 @@ class DaySummaryActivity : AppCompatActivity() {
         return row
     }
 
+    private fun nameToInitials(name: String): String {
+        val words = name.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
+        return when {
+            words.isEmpty() -> "??"
+            words.size == 1 -> words[0].take(2).uppercase(Locale.getDefault())
+            else -> "${words.first()[0]}${words.last()[0]}".uppercase(Locale.getDefault())
+        }
+    }
+
+    private fun nameToColor(name: String): Int {
+        val rng = Random(name.hashCode())
+        val hue = rng.nextFloat() * 360f
+        return Color.HSVToColor(floatArrayOf(hue, 0.60f, 0.80f))
+    }
+
+    private fun contrastColor(bgColor: Int): Int {
+        val luminance = 0.299 * (Color.red(bgColor) / 255.0) +
+                        0.587 * (Color.green(bgColor) / 255.0) +
+                        0.114 * (Color.blue(bgColor) / 255.0)
+        return if (luminance > 0.5) Color.BLACK else Color.WHITE
+    }
+
+    private fun createAvatarView(name: String): TextView {
+        val bgColor = nameToColor(name)
+        val size = (40 * resources.displayMetrics.density).toInt()
+        val marginEnd = (8 * resources.displayMetrics.density).toInt()
+        return TextView(this).apply {
+            text = nameToInitials(name)
+            setTextColor(contrastColor(bgColor))
+            textSize = 13f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(bgColor)
+            }
+            layoutParams = LinearLayout.LayoutParams(size, size).apply {
+                setMargins(0, 4, marginEnd, 4)
+                gravity = Gravity.CENTER_VERTICAL
+            }
+        }
+    }
+
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
@@ -176,4 +240,3 @@ class DaySummaryActivity : AppCompatActivity() {
         }
     }
 }
-
