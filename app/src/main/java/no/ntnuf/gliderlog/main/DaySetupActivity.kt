@@ -113,7 +113,7 @@ class DaySetupActivity : AppCompatActivity() {
 
             dayLogFileNameSuffix = SimpleDateFormat("yyyy_MM_dd", Locale.ENGLISH).format(selecteddate)
             foundDaylog = loadDayLog()
-            resumeDayButton.visibility = if (foundDaylog) View.VISIBLE else View.INVISIBLE
+            updateDayActionButtonsVisibility()
         }
 
         startDayButton = findViewById(R.id.startDayButton)
@@ -148,7 +148,7 @@ class DaySetupActivity : AppCompatActivity() {
         resumeDayButton = findViewById(R.id.resumeDayButton)
         ColoringUtil.colorMe(resumeDayButton, resources.getColor(R.color.resumeday_button, theme))
         resumeDayButton.setTextColor(resources.getColor(R.color.white, theme))
-        resumeDayButton.visibility = View.INVISIBLE
+        updateDayActionButtonsVisibility()
         resumeDayButton.setOnClickListener {
             val intent = Intent(this, DayOverviewActivity::class.java)
             val bundle = bundleDayInfo().apply {
@@ -275,6 +275,12 @@ class DaySetupActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateDayActionButtonsVisibility() {
+        val hasLogForSelectedDate = foundDaylog
+        resumeDayButton.visibility = if (hasLogForSelectedDate) View.VISIBLE else View.INVISIBLE
+        startDayButton.visibility = if (hasLogForSelectedDate) View.INVISIBLE else View.VISIBLE
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
@@ -331,7 +337,7 @@ class DaySetupActivity : AppCompatActivity() {
         dayLogFileNameSuffix = SimpleDateFormat("yyyy_MM_dd", Locale.ENGLISH).format(selecteddate)
 
         foundDaylog = loadDayLog()
-        resumeDayButton.visibility = if (foundDaylog) View.VISIBLE else View.INVISIBLE
+        updateDayActionButtonsVisibility()
 
         if (foundDaylog && autoLoadLog) {
             val datePicked = Calendar.getInstance().apply {
