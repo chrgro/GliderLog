@@ -155,13 +155,14 @@
         android:padding="10dp"
         android:text="@string/new_flight" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <Button
         android:id="@+id/finishLogEditButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
+        android:padding="10dp"
         android:text="@string/finish_log_edit"
         android:visibility="gone" />
 

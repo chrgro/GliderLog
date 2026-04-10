@@ -27,7 +27,6 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import androidx.preference.PreferenceManager
 import no.ntnuf.gliderlog.R
 import no.ntnuf.gliderlog.common.ColoringUtil
@@ -64,7 +63,7 @@ class DayOverviewActivity : AppCompatActivity() {
 
     private lateinit var tableLayout: TableLayout
     private lateinit var addFlightButton: Button
-    private lateinit var finishLogEditButton: ExtendedFloatingActionButton
+    private lateinit var finishLogEditButton: Button
     private var editMode = false
     private var roundSumsTo = 5
     private var menuRef: Menu? = null
@@ -127,12 +126,17 @@ class DayOverviewActivity : AppCompatActivity() {
         }
 
         finishLogEditButton = findViewById(R.id.finishLogEditButton)
+        ColoringUtil.colorMe(finishLogEditButton, resources.getColor(R.color.colorPrimary, theme))
+        finishLogEditButton.setTextColor(resources.getColor(R.color.white, theme))
         applyFabInsets(finishLogEditButton)
         finishLogEditButton.setOnClickListener {
-            setEditMode(false)
+            editMode = false
+            menuRef?.findItem(R.id.menu_editlog)?.title = getString(R.string.edit_log)
+            refreshTowTable()
+            updateAddFlightButtonVisibility()
         }
 
-        syncUiStateWithMode()
+        updateAddFlightButtonVisibility()
 
         if (settings.getBoolean("upload_log_enabled", false)) {
             val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -150,7 +154,7 @@ class DayOverviewActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         roundSumsTo = settings.getString("round_sums_to", "5")?.toIntOrNull() ?: 5
-        syncUiStateWithMode()
+        updateAddFlightButtonVisibility()
         invalidateOptionsMenu()
     }
 
@@ -158,15 +162,12 @@ class DayOverviewActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.dayoverview_menu, menu)
         menuRef = menu
 
-        syncUiStateWithMode()
+        menu.findItem(R.id.menu_loadfikencontacts).isVisible = settings.getBoolean("fiken_api_enabled", false)
+        menu.findItem(R.id.menu_reenablelog).isVisible = daylog.logIsLocked
+        menu.findItem(R.id.menu_editlog).isVisible = !daylog.logIsLocked
+        menu.findItem(R.id.menu_deletedaylog).isVisible = !daylog.logIsLocked
 
         return true
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menuRef = menu
-        syncUiStateWithMode()
-        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -221,7 +222,10 @@ class DayOverviewActivity : AppCompatActivity() {
             }
 
             R.id.menu_editlog -> {
-                setEditMode(!editMode)
+                editMode = !editMode
+                item.title = if (editMode) getString(R.string.finish_log_edit) else getString(R.string.edit_log)
+                refreshTowTable()
+                updateAddFlightButtonVisibility()
                 true
             }
 
@@ -251,7 +255,10 @@ class DayOverviewActivity : AppCompatActivity() {
             R.id.menu_reenablelog -> {
                 daylog.logIsLocked = false
                 saveDayLog()
-                syncUiStateWithMode()
+                menuRef?.findItem(R.id.menu_reenablelog)?.isVisible = false
+                menuRef?.findItem(R.id.menu_editlog)?.isVisible = true
+                menuRef?.findItem(R.id.menu_deletedaylog)?.isVisible = true
+                updateAddFlightButtonVisibility()
                 true
             }
 
@@ -336,8 +343,10 @@ class DayOverviewActivity : AppCompatActivity() {
             startActivityForResult(Intent.createChooser(emailIntent, "Send email using"), REQUEST_SEND_LOG_EMAIL)
 
             daylog.setLogHasBeenSent()
-            setEditMode(false)
-            syncUiStateWithMode()
+            updateAddFlightButtonVisibility()
+            menuRef?.findItem(R.id.menu_reenablelog)?.isVisible = true
+            menuRef?.findItem(R.id.menu_editlog)?.isVisible = false
+            menuRef?.findItem(R.id.menu_deletedaylog)?.isVisible = false
             saveDayLog()
         } catch (_: IOException) {
             Toast.makeText(this, R.string.failed_to_prepare_email_log, Toast.LENGTH_LONG).show()
@@ -653,34 +662,9 @@ class DayOverviewActivity : AppCompatActivity() {
         picker.show()
     }
 
-    private fun setEditMode(enabled: Boolean) {
-        if (editMode == enabled) {
-            syncUiStateWithMode()
-            return
-        }
-
-        editMode = enabled
-        refreshTowTable()
-        syncUiStateWithMode()
-    }
-
-    private fun syncUiStateWithMode() {
-        if (daylog.logIsLocked && editMode) {
-            editMode = false
-            refreshTowTable()
-        }
-
-        val canEditLog = !daylog.logIsLocked
-        addFlightButton.visibility = if (!editMode && canEditLog) View.VISIBLE else View.GONE
-        finishLogEditButton.visibility = if (editMode && canEditLog) View.VISIBLE else View.GONE
-
-        menuRef?.findItem(R.id.menu_loadfikencontacts)?.isVisible = settings.getBoolean("fiken_api_enabled", false)
-        menuRef?.findItem(R.id.menu_reenablelog)?.isVisible = daylog.logIsLocked
-        menuRef?.findItem(R.id.menu_editlog)?.apply {
-            isVisible = canEditLog
-            title = if (editMode) getString(R.string.finish_log_edit) else getString(R.string.edit_log)
-        }
-        menuRef?.findItem(R.id.menu_deletedaylog)?.isVisible = canEditLog
+    private fun updateAddFlightButtonVisibility() {
+        addFlightButton.visibility = if (editMode || daylog.logIsLocked) View.GONE else View.VISIBLE
+        finishLogEditButton.visibility = if (editMode && !daylog.logIsLocked) View.VISIBLE else View.GONE
     }
 
     private fun deleteDayLog(): Boolean {
