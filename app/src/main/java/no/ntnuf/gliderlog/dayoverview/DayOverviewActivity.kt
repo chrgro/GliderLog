@@ -456,22 +456,38 @@ class DayOverviewActivity : AppCompatActivity() {
         val flightIndex = flightNumber - 1
         if (!editMode) {
             when (flight.status ?: FlightStatus.NOT_DEPARTED) {
-                FlightStatus.NOT_DEPARTED -> buttonsLayout.addView(actionButton(android.R.drawable.ic_media_play) {
+                FlightStatus.NOT_DEPARTED -> buttonsLayout.addView(actionButton(
+                    iconRes = R.drawable.takeoff,
+                    leftPaddingPx = 50,
+                    rightPaddingPx = 25,
+                ) {
                     setTimeFromTimepicker(flight, "takeoff")
                 })
 
-                FlightStatus.DEPARTED -> buttonsLayout.addView(actionButton(android.R.drawable.ic_menu_upload) {
+                FlightStatus.DEPARTED -> buttonsLayout.addView(actionButton(
+                    iconRes = R.drawable.release,
+                    leftPaddingPx = 25,
+                    rightPaddingPx = 25,
+                ) {
                     setTimeFromTimepicker(flight, "release")
                 })
 
-                FlightStatus.RELEASED -> buttonsLayout.addView(actionButton(android.R.drawable.ic_menu_compass) {
+                FlightStatus.RELEASED -> buttonsLayout.addView(actionButton(
+                    iconRes = R.drawable.landing,
+                    leftPaddingPx = 25,
+                    rightPaddingPx = 25,
+                ) {
                     setTimeFromTimepicker(flight, "landing")
                 })
 
                 FlightStatus.LANDED -> Unit
             }
         } else {
-            buttonsLayout.addView(actionButton(android.R.drawable.ic_menu_edit) {
+            buttonsLayout.addView(actionButton(
+                iconRes = android.R.drawable.ic_menu_edit,
+                leftPaddingPx = 50,
+                rightPaddingPx = 25,
+            ) {
                 val updateIntent = Intent(this, NewFlightActivity::class.java).apply {
                     putExtra("date", daylog.date)
                     putExtra("action", "update")
@@ -481,7 +497,11 @@ class DayOverviewActivity : AppCompatActivity() {
                 startActivityForResult(updateIntent, REQUEST_NEW_FLIGHT)
             })
 
-            buttonsLayout.addView(actionButton(android.R.drawable.ic_menu_delete) {
+            buttonsLayout.addView(actionButton(
+                iconRes = android.R.drawable.ic_menu_delete,
+                leftPaddingPx = 50,
+                rightPaddingPx = 25,
+            ) {
                 AlertDialog.Builder(this)
                     .setMessage(R.string.confirm_delete_log_line)
                     .setCancelable(false)
@@ -542,10 +562,17 @@ class DayOverviewActivity : AppCompatActivity() {
         return row
     }
 
-    private fun actionButton(iconRes: Int, onClick: () -> Unit): ImageView {
+    private fun actionButton(
+        iconRes: Int,
+        leftPaddingPx: Int,
+        rightPaddingPx: Int,
+        onClick: () -> Unit,
+    ): ImageView {
         return ImageView(this).apply {
+            val dpScale = resources.displayMetrics.density
             setImageResource(iconRes)
-            setPadding(30, 0, 20, 0)
+            setPadding(leftPaddingPx, 0, rightPaddingPx, 0)
+            maxHeight = (40 * dpScale).toInt()
             adjustViewBounds = true
             setOnClickListener { onClick() }
         }
