@@ -487,7 +487,7 @@ class DayOverviewActivity : AppCompatActivity() {
             }
         } else {
             buttonsLayout.addView(actionButton(
-                iconRes = android.R.drawable.ic_menu_edit,
+                iconRes = R.drawable.edit,
                 leftPaddingPx = 50,
                 rightPaddingPx = 25,
             ) {
@@ -501,7 +501,7 @@ class DayOverviewActivity : AppCompatActivity() {
             })
 
             buttonsLayout.addView(actionButton(
-                iconRes = android.R.drawable.ic_menu_delete,
+                iconRes = R.drawable.x_circle,
                 leftPaddingPx = 50,
                 rightPaddingPx = 25,
             ) {
