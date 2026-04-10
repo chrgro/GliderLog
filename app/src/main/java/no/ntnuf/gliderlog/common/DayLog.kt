@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
 import java.util.Locale
+import org.json.JSONArray
+import org.json.JSONObject
 
 class DayLog : Serializable {
     companion object {
@@ -214,33 +216,31 @@ class DayLog : Serializable {
     fun getJSONOutput(): String {
         val outdf = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val time = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH)
-        val ret = StringBuilder()
-
-        ret.append("{\n")
-        ret.append("\"headOfOperations\": \"").append(headOfOperations?.name.orEmpty()).append("\",\n")
-        ret.append("\"airfield\": \"").append(airfield.orEmpty()).append("\",\n")
-        ret.append("\"date\": \"").append(outdf.format(date)).append("\",\n")
-        ret.append("\"sent_times\": \"").append(logSentNumberOfTimes).append("\",\n")
-        ret.append("\"flights\": [\n")
+        val flightsArray = JSONArray()
 
         for ((index, flight) in flights.withIndex()) {
-            if (index > 0) ret.append(",\n")
-            ret.append(" {\n")
-            ret.append("  \"flightnum\": ").append(index + 1).append(",\n")
-            ret.append("  \"registration\": \"").append(flight.registration).append("\",\n")
-            ret.append("  \"pilot\": \"").append(flight.pilot?.name.orEmpty()).append("\",\n")
-            ret.append("  \"pilotRole\": \"").append(flight.pilotType).append("\",\n")
-            ret.append("  \"takeoff\": \"").append(formatTime(time, flight.takeoff)).append("\",\n")
-            ret.append("  \"tow_release\": \"").append(formatTime(time, flight.towRelease)).append("\",\n")
-            ret.append("  \"landing\": \"").append(formatTime(time, flight.landing)).append("\",\n")
-            ret.append("  \"towDuration\": \"").append(flight.getTowDurationStr()).append("\",\n")
-            ret.append("  \"flightDuration\": \"").append(flight.getFlightDurationStr()).append("\",\n")
-            ret.append("  \"notes\": \"").append(flight.notes.replace("\"", "\\\"")).append("\"\n")
-            ret.append(" }")
+            val flightObject = JSONObject()
+                .put("flightnum", index + 1)
+                .put("registration", flight.registration)
+                .put("pilot", flight.pilot?.name.orEmpty())
+                .put("pilotRole", flight.pilotType.toString())
+                .put("takeoff", formatTime(time, flight.takeoff))
+                .put("tow_release", formatTime(time, flight.towRelease))
+                .put("landing", formatTime(time, flight.landing))
+                .put("towDuration", flight.getTowDurationStr())
+                .put("flightDuration", flight.getFlightDurationStr())
+                .put("notes", flight.notes)
+            flightsArray.put(flightObject)
         }
 
-        ret.append("\n]\n}")
-        return ret.toString()
+        val payload = JSONObject()
+            .put("headOfOperations", headOfOperations?.name.orEmpty())
+            .put("airfield", airfield.orEmpty())
+            .put("date", outdf.format(date))
+            .put("sent_times", logSentNumberOfTimes.toString())
+            .put("flights", flightsArray)
+
+        return payload.toString()
     }
 
     private fun formatTime(format: SimpleDateFormat, value: Date?): String {
