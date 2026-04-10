@@ -24,7 +24,6 @@ import no.ntnuf.gliderlog.common.FlightStatus
 import no.ntnuf.gliderlog.common.FlightTime
 import no.ntnuf.gliderlog.common.FlightTimeList
 import no.ntnuf.gliderlog.common.NameRegistrationRole
-import no.ntnuf.gliderlog.common.PilotType
 import no.ntnuf.gliderlog.common.applyContentInsets
 import no.ntnuf.gliderlog.common.applyToolbarInsets
 import no.ntnuf.gliderlog.common.enableImmersiveFullscreen
@@ -148,7 +147,10 @@ class DaySummaryActivity : AppCompatActivity() {
             layoutParams = lp
         }
         if (!info.isPlane) {
-            nameRoleReg.addView(TextView(this).apply { text = info.name.orEmpty() })
+            nameRoleReg.addView(TextView(this).apply {
+                text = info.name.orEmpty()
+                typeface = Typeface.DEFAULT_BOLD
+            })
             nameRoleReg.addView(TextView(this).apply { text = info.role?.toString() ?: "" })
         }
         nameRoleReg.addView(TextView(this).apply { text = info.registration })
@@ -161,21 +163,11 @@ class DaySummaryActivity : AppCompatActivity() {
         labels.addView(TextView(this).apply { text = if (flightTime.landed) "Flights:" else "Not landed! Flights:" })
         values.addView(TextView(this).apply { text = flightTime.flights.toString() })
 
-        labels.addView(TextView(this).apply { text = "Flight Duration:" })
+        labels.addView(TextView(this).apply { text = getString(R.string.summary_label_duration) })
         values.addView(TextView(this).apply { text = minutesToDurationStr(flightTime.flightMinutes) })
 
-        labels.addView(TextView(this).apply { text = "Tow Duration:" })
+        labels.addView(TextView(this).apply { text = getString(R.string.summary_label_tow) })
         values.addView(TextView(this).apply { text = minutesToDurationStr(flightTime.towMinutes) })
-
-        if (!info.isPlane && info.role == PilotType.INSTRUCTOR) {
-            labels.addView(TextView(this).apply { text = "Instructor Duration:" })
-            values.addView(TextView(this).apply { text = minutesToDurationStr(flightTime.instructorMinutes) })
-        }
-
-        if (!info.isPlane && info.role == PilotType.STUDENT) {
-            labels.addView(TextView(this).apply { text = "Student Duration:" })
-            values.addView(TextView(this).apply { text = minutesToDurationStr(flightTime.studentMinutes) })
-        }
 
         row.addView(labels)
         row.addView(values)
@@ -206,7 +198,7 @@ class DaySummaryActivity : AppCompatActivity() {
 
     private fun createAvatarView(name: String): TextView {
         val bgColor = nameToColor(name)
-        val size = (40 * resources.displayMetrics.density).toInt()
+        val size = resources.getDimensionPixelSize(R.dimen.summary_avatar_size)
         val marginEnd = (8 * resources.displayMetrics.density).toInt()
         return TextView(this).apply {
             text = nameToInitials(name)
