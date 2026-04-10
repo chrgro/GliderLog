@@ -10,7 +10,7 @@ import org.json.JSONObject
 
 class DayLog : Serializable {
     companion object {
-        private const val serialVersionUID: Long = 8L
+        private const val serialVersionUID: Long = 9L
         const val dayLogFileName: String = "gliderlog_"
     }
 

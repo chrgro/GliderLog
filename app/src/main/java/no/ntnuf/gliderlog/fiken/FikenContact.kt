@@ -5,6 +5,8 @@ import org.json.JSONObject
 
 class FikenContact : Contact() {
     companion object {
+        private const val serialVersionUID: Long = 1L
+
         fun createContact(root: JSONObject): FikenContact {
             return FikenContact().apply {
                 name = root.optString("name", "")

@@ -5,7 +5,7 @@ import java.util.ArrayList
 
 class ContactList : Serializable {
     companion object {
-        private const val serialVersionUID: Long = 2L
+        private const val serialVersionUID: Long = 3L
     }
 
     var contacts: ArrayList<Contact> = ArrayList()

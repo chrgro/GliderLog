@@ -4,7 +4,7 @@ import java.io.Serializable
 
 open class Contact : Serializable {
     companion object {
-        private const val serialVersionUID: Long = 2L
+        private const val serialVersionUID: Long = 3L
     }
 
     var name: String? = null

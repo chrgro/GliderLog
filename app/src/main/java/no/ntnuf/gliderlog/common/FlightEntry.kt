@@ -7,7 +7,7 @@ import java.util.Date
 
 class FlightEntry : Serializable {
     companion object {
-        private const val serialVersionUID: Long = 1L
+        private const val serialVersionUID: Long = 2L
 
         fun hhcolonmmFromDate(date: Date): String {
             val outdf = SimpleDateFormat("HH:mm")

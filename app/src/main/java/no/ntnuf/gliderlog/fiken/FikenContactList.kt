@@ -4,6 +4,10 @@ import org.json.JSONArray
 import java.io.Serializable
 
 class FikenContactList : Serializable {
+    companion object {
+        private const val serialVersionUID: Long = 1L
+    }
+
     val contacts: ArrayList<FikenContact> = arrayListOf()
 
     fun addToFikenContactList(jsonContacts: JSONArray): Boolean {
