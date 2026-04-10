@@ -130,45 +130,50 @@ class DaySummaryActivity : AppCompatActivity() {
     private fun addSummaryRow(info: NameRegistrationRole, flightTime: FlightTime): TableRow {
         val row = TableRow(this)
 
-        val nameContainer = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-
         val avatarSeed: String
         val avatarText: String
         if (info.isPlane) {
             avatarSeed = info.registration
             avatarText = registrationToAvatarChars(info.registration)
+
+            val planeContainer = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            planeContainer.addView(createAvatarView(avatarText, avatarSeed))
+            planeContainer.addView(TextView(this).apply {
+                text = info.registration
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER_VERTICAL
+            })
+            row.addView(planeContainer)
         } else {
             val name = info.name.orEmpty()
             avatarSeed = name
             avatarText = nameToInitials(name)
-        }
-        nameContainer.addView(createAvatarView(avatarText, avatarSeed))
 
-        val nameRoleReg = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            lp.gravity = Gravity.CENTER_VERTICAL
-            layoutParams = lp
-        }
-        if (!info.isPlane) {
-            nameRoleReg.addView(TextView(this).apply {
-                text = info.name.orEmpty()
+            val personContainer = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+            personContainer.addView(TextView(this).apply {
+                text = name
                 typeface = Typeface.DEFAULT_BOLD
             })
-            nameRoleReg.addView(TextView(this).apply { text = info.role?.toString() ?: "" })
-        }
-        val registrationView = TextView(this).apply {
-            text = info.registration
-            if (info.isPlane) {
-                typeface = Typeface.DEFAULT_BOLD
+
+            val roleRegRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            roleRegRow.addView(createAvatarView(avatarText, avatarSeed))
+
+            val roleRegColumn = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                val lp = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                lp.gravity = Gravity.CENTER_VERTICAL
+                layoutParams = lp
             }
+            roleRegColumn.addView(TextView(this).apply { text = info.role?.toString() ?: "" })
+            roleRegColumn.addView(TextView(this).apply { text = info.registration })
+            roleRegRow.addView(roleRegColumn)
+
+            personContainer.addView(roleRegRow)
+            row.addView(personContainer)
         }
-        nameRoleReg.addView(registrationView)
-        nameContainer.addView(nameRoleReg)
-        row.addView(nameContainer)
 
         val labels = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val values = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
