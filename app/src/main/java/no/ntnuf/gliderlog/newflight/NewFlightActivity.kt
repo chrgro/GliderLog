@@ -26,6 +26,10 @@ import no.ntnuf.gliderlog.common.FlightStatus
 import no.ntnuf.gliderlog.common.NotesAdapter
 import no.ntnuf.gliderlog.common.PilotType
 import no.ntnuf.gliderlog.common.RegistrationList
+import no.ntnuf.gliderlog.common.applyContentInsets
+import no.ntnuf.gliderlog.common.applyFabInsets
+import no.ntnuf.gliderlog.common.applyToolbarInsets
+import no.ntnuf.gliderlog.common.enableImmersiveFullscreen
 import java.util.Calendar
 import java.util.Date
 
@@ -62,6 +66,7 @@ class NewFlightActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableImmersiveFullscreen()
         setContentView(R.layout.activity_new_flight)
 
         val bundle = intent.extras ?: Bundle()
@@ -74,6 +79,8 @@ class NewFlightActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbarnewtow)
         setSupportActionBar(toolbar)
+        applyToolbarInsets(toolbar)
+        applyContentInsets(findViewById(R.id.newFlightScroll))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -146,6 +153,7 @@ class NewFlightActivity : AppCompatActivity() {
         }
 
         val fab = findViewById<FloatingActionButton>(R.id.startTowButton)
+        applyFabInsets(fab)
         fab.setOnClickListener {
             finishWithFlightResult()
         }
@@ -340,6 +348,11 @@ class NewFlightActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            enableImmersiveFullscreen()
+        }
+    }
 }
-
-

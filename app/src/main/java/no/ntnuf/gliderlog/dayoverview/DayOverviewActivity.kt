@@ -12,6 +12,10 @@ import no.ntnuf.gliderlog.R
 import no.ntnuf.gliderlog.common.Contact
 import no.ntnuf.gliderlog.common.DayLog
 import no.ntnuf.gliderlog.common.FlightEntry
+import no.ntnuf.gliderlog.common.applyContentInsets
+import no.ntnuf.gliderlog.common.applyFabInsets
+import no.ntnuf.gliderlog.common.applyToolbarInsets
+import no.ntnuf.gliderlog.common.enableImmersiveFullscreen
 import no.ntnuf.gliderlog.newflight.NewFlightActivity
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -32,6 +36,7 @@ class DayOverviewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableImmersiveFullscreen()
         setContentView(R.layout.activity_day_overview)
 
         val bundle = savedInstanceState ?: intent.extras ?: Bundle()
@@ -42,6 +47,7 @@ class DayOverviewActivity : AppCompatActivity() {
         val formattedDate = SimpleDateFormat("EEEE d/M", Locale.ENGLISH).format(date)
         toolbar.title = "Day Log  -  $formattedDate"
         setSupportActionBar(toolbar)
+        applyToolbarInsets(toolbar)
 
         onBackPressedDispatcher.addCallback(this) {
             val response = Intent().apply {
@@ -61,6 +67,7 @@ class DayOverviewActivity : AppCompatActivity() {
         }
 
         val info = findViewById<TextView>(R.id.dayOverviewInfo)
+        applyContentInsets(info)
         info.text = getString(
             R.string.day_overview_placeholder,
             daylog.headOfOperations?.name ?: "",
@@ -68,6 +75,7 @@ class DayOverviewActivity : AppCompatActivity() {
         )
 
         val addFlightButton = findViewById<FloatingActionButton>(R.id.addFlightButton)
+        applyFabInsets(addFlightButton)
         addFlightButton.setOnClickListener {
             val intent = Intent(this, NewFlightActivity::class.java).apply {
                 putExtra("date", daylog.date)
@@ -135,8 +143,11 @@ class DayOverviewActivity : AppCompatActivity() {
         }
         saveDayLog()
     }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            enableImmersiveFullscreen()
+        }
+    }
 }
-
-
-
-

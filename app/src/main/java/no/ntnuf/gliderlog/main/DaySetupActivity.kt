@@ -24,6 +24,9 @@ import no.ntnuf.gliderlog.common.ColoringUtil
 import no.ntnuf.gliderlog.common.Contact
 import no.ntnuf.gliderlog.common.ContactListManager
 import no.ntnuf.gliderlog.common.DayLog
+import no.ntnuf.gliderlog.common.applyContentInsets
+import no.ntnuf.gliderlog.common.applyToolbarInsets
+import no.ntnuf.gliderlog.common.enableImmersiveFullscreen
 import no.ntnuf.gliderlog.dayoverview.DayOverviewActivity
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -63,11 +66,14 @@ class DaySetupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableImmersiveFullscreen()
         setContentView(R.layout.activity_daysetup)
 
         toolbar = findViewById(R.id.toolbarmain)
         toolbar.title = "Prepare Log"
         setSupportActionBar(toolbar)
+        applyToolbarInsets(toolbar)
+        applyContentInsets(findViewById(R.id.daySetupContent))
 
         settings = PreferenceManager.getDefaultSharedPreferences(this)
         contactlistmanager = ContactListManager(this)
@@ -344,5 +350,11 @@ class DaySetupActivity : AppCompatActivity() {
         daylogdialog = getPrevLogsAlertDialog()
         datepicker.requestFocus()
     }
-}
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            enableImmersiveFullscreen()
+        }
+    }
+}
