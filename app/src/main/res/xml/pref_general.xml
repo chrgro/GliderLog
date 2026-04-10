@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Plane Registrations">
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="airfield_default"
+            android:title="Default airfield."
+            android:summary="Suggested when preparing a log." />
+
+        <EditTextPreference
+            android:defaultValue="LN-G"
+            android:key="glider_default_reg"
+            android:title="Default glider registration"
+            android:summary="Suggestion when starting a new flight. Default: LN-G" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Summing">
+        <EditTextPreference
+            android:defaultValue="5"
+            android:key="round_sums_to"
+            android:title="Round duration sums to nearest N minutes"
+            android:summary="Only affects summary page. Default: 5" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Sending Logs">
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="send_log_email"
+            android:title="Email address to send log to" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="send_log_to_customers"
+            android:title="Send log to pilots"
+            android:summary="If enabled, include pilots with known email addresses." />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="send_log_to_customers_using_bcc"
+            android:title="Send using BCC"
+            android:summary="If log is sent to pilots, choose BCC or CC." />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Upload Logs">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="upload_log_enabled"
+            android:title="Upload logs to server"
+            android:summary="If enabled, upload logs with HTTP POST." />
+
+        <EditTextPreference
+            android:defaultValue="https://"
+            android:key="upload_log_url"
+            android:title="URL for log upload" />
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="upload_log_username"
+            android:title="HTTP basic auth username" />
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="upload_log_password"
+            android:title="HTTP basic auth password" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Fiken.no API">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="fiken_api_enabled"
+            android:title="Enable Fiken API usage"
+            android:summary="If enabled, allows loading names and emails from Fiken." />
+
+        <EditTextPreference
+            android:defaultValue="https://api.fiken.no/api/v2/companies/&lt;companyname&gt;/contacts"
+            android:key="fiken_api_url"
+            android:title="Fiken URL to Contact REST API" />
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="fiken_api_password"
+            android:title="Fiken API bearer key" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Notes">
+        <EditTextPreference
+            android:defaultValue="Instruktoropplaering,Introkurs,Klubbslep"
+            android:key="default_notes"
+            android:title="Default notes"
+            android:summary="Comma-separated list of default autocomplete notes available." />
+    </PreferenceCategory>
+
+</PreferenceScreen>
+
+

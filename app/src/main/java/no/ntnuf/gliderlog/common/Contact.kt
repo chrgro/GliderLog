@@ -2,7 +2,7 @@ package no.ntnuf.gliderlog.common
 
 import java.io.Serializable
 
-class Contact : Serializable {
+open class Contact : Serializable {
     companion object {
         private const val serialVersionUID: Long = 2L
     }

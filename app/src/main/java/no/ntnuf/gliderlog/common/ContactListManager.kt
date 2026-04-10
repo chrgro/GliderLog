@@ -3,6 +3,7 @@ package no.ntnuf.gliderlog.common
 import android.content.Context
 import android.util.Log
 import android.widget.ArrayAdapter
+import no.ntnuf.gliderlog.fiken.FikenContactList
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.ObjectInputStream
@@ -99,6 +100,15 @@ class ContactListManager(private val context: Context) {
 
     fun getContactNameListAdapter(): ArrayAdapter<Contact> {
         return adapter
+    }
+
+    fun setFikenContacts(fikenContactList: FikenContactList) {
+        contactlist.clear()
+        for (contact in fikenContactList.contacts) {
+            contactlist.addContact(contact)
+        }
+        save()
+        adapter.notifyDataSetChanged()
     }
 }
 

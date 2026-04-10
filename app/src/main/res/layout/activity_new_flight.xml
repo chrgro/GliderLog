@@ -15,6 +15,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
     <ScrollView
+        android:id="@+id/newFlightScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbarnewtow"
