@@ -281,22 +281,27 @@ class DayOverviewActivity : AppCompatActivity() {
     private fun sendLogViaEmail() {
         val dateForSubject = SimpleDateFormat("EEEE yyyy-MM-dd", Locale.ENGLISH).format(daylog.date)
         val dateForFile = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(daylog.date)
-        val filename = "gliderlog_$dateForFile.html"
+        val htmlFilename = "gliderlog_$dateForFile.html"
+        val jsonFilename = "gliderlog_$dateForFile.json"
         val receiverEmail = settings.getString("send_log_email", "") ?: ""
 
         try {
             val dir = externalCacheDir ?: cacheDir
-            val logFile = File(dir, filename)
-            logFile.writeText(daylog.getHTMLtableoutput(roundSumsTo))
+            val htmlLogFile = File(dir, htmlFilename)
+            val jsonLogFile = File(dir, jsonFilename)
+            htmlLogFile.writeText(daylog.getHTMLtableoutput(roundSumsTo))
+            jsonLogFile.writeText(daylog.getJSONOutput())
 
             val authority = "${packageName}.fileprovider"
-            val fileUri: Uri = FileProvider.getUriForFile(this, authority, logFile)
+            val htmlFileUri: Uri = FileProvider.getUriForFile(this, authority, htmlLogFile)
+            val jsonFileUri: Uri = FileProvider.getUriForFile(this, authority, jsonLogFile)
+            val attachmentUris = arrayListOf(htmlFileUri, jsonFileUri)
 
-            val emailIntent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
+            val emailIntent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                type = "*/*"
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(receiverEmail))
                 putExtra(Intent.EXTRA_SUBJECT, "Glider Log for $dateForSubject")
-                putExtra(Intent.EXTRA_STREAM, fileUri)
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, attachmentUris)
                 putExtra(Intent.EXTRA_TEXT, daylog.getMarkdownOutput(roundSumsTo))
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
