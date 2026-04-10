@@ -25,4 +25,5 @@
     <string name="summary_label_duration">Duration:</string>
     <string name="summary_label_tow">Tow:</string>
     <string name="summary_only_landed_notice">Not all flights have landed, only summarizing landed flights.</string>
+    <string name="new_flight">New flight</string>
 </resources>

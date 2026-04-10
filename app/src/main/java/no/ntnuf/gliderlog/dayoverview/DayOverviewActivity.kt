@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -27,8 +28,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.FileProvider
 import androidx.preference.PreferenceManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import no.ntnuf.gliderlog.R
+import no.ntnuf.gliderlog.common.ColoringUtil
 import no.ntnuf.gliderlog.common.Contact
 import no.ntnuf.gliderlog.common.ContactListManager
 import no.ntnuf.gliderlog.common.DayLog
@@ -61,7 +62,7 @@ class DayOverviewActivity : AppCompatActivity() {
     private lateinit var settings: SharedPreferences
 
     private lateinit var tableLayout: TableLayout
-    private lateinit var addFlightButton: FloatingActionButton
+    private lateinit var addFlightButton: Button
     private var editMode = false
     private var roundSumsTo = 5
     private var menuRef: Menu? = null
@@ -112,6 +113,8 @@ class DayOverviewActivity : AppCompatActivity() {
         refreshTowTable()
 
         addFlightButton = findViewById(R.id.addFlightButton)
+        ColoringUtil.colorMe(addFlightButton, resources.getColor(R.color.resumeday_button, theme))
+        addFlightButton.setTextColor(resources.getColor(R.color.white, theme))
         applyFabInsets(addFlightButton)
         addFlightButton.setOnClickListener {
             val next = Intent(this, NewFlightActivity::class.java).apply {
@@ -646,11 +649,7 @@ class DayOverviewActivity : AppCompatActivity() {
     }
 
     private fun updateAddFlightButtonVisibility() {
-        if (editMode || daylog.logIsLocked) {
-            addFlightButton.hide()
-        } else {
-            addFlightButton.show()
-        }
+        addFlightButton.visibility = if (editMode || daylog.logIsLocked) View.GONE else View.VISIBLE
     }
 
     private fun deleteDayLog(): Boolean {

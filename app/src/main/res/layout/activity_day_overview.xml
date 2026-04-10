@@ -145,17 +145,14 @@
         </ScrollView>
     </RelativeLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <Button
         android:id="@+id/addFlightButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_input_add"
-        android:tint="@color/white" />
+        android:padding="10dp"
+        android:text="@string/new_flight" />
 
 </RelativeLayout>
-
-
-
