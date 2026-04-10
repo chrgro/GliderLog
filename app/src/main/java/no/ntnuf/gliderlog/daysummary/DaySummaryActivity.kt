@@ -132,10 +132,17 @@ class DaySummaryActivity : AppCompatActivity() {
 
         val nameContainer = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
 
-        if (!info.isPlane) {
+        val avatarSeed: String
+        val avatarText: String
+        if (info.isPlane) {
+            avatarSeed = info.registration
+            avatarText = registrationToAvatarChars(info.registration)
+        } else {
             val name = info.name.orEmpty()
-            nameContainer.addView(createAvatarView(name))
+            avatarSeed = name
+            avatarText = nameToInitials(name)
         }
+        nameContainer.addView(createAvatarView(avatarText, avatarSeed))
 
         val nameRoleReg = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -153,7 +160,13 @@ class DaySummaryActivity : AppCompatActivity() {
             })
             nameRoleReg.addView(TextView(this).apply { text = info.role?.toString() ?: "" })
         }
-        nameRoleReg.addView(TextView(this).apply { text = info.registration })
+        val registrationView = TextView(this).apply {
+            text = info.registration
+            if (info.isPlane) {
+                typeface = Typeface.DEFAULT_BOLD
+            }
+        }
+        nameRoleReg.addView(registrationView)
         nameContainer.addView(nameRoleReg)
         row.addView(nameContainer)
 
@@ -183,8 +196,14 @@ class DaySummaryActivity : AppCompatActivity() {
         }
     }
 
-    private fun nameToColor(name: String): Int {
-        val rng = Random(name.hashCode())
+    private fun registrationToAvatarChars(registration: String): String {
+        val trimmed = registration.trim()
+        if (trimmed.isEmpty()) return "??"
+        return trimmed.takeLast(2).uppercase(Locale.getDefault())
+    }
+
+    private fun seedToColor(seed: String): Int {
+        val rng = Random(seed.hashCode())
         val hue = rng.nextFloat() * 360f
         return Color.HSVToColor(floatArrayOf(hue, 0.60f, 0.80f))
     }
@@ -196,12 +215,12 @@ class DaySummaryActivity : AppCompatActivity() {
         return if (luminance > 0.5) Color.BLACK else Color.WHITE
     }
 
-    private fun createAvatarView(name: String): TextView {
-        val bgColor = nameToColor(name)
+    private fun createAvatarView(text: String, colorSeed: String): TextView {
+        val bgColor = seedToColor(colorSeed)
         val size = resources.getDimensionPixelSize(R.dimen.summary_avatar_size)
         val marginEnd = (8 * resources.displayMetrics.density).toInt()
         return TextView(this).apply {
-            text = nameToInitials(name)
+            this.text = text
             setTextColor(contrastColor(bgColor))
             textSize = 13f
             typeface = Typeface.DEFAULT_BOLD
