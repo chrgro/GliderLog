@@ -85,7 +85,7 @@
 
     <PreferenceCategory android:title="Notes">
         <EditTextPreference
-            android:defaultValue="Instruktoropplaering,Introkurs"
+            android:defaultValue="Introkurs,Instruktøropplæring"
             android:key="default_notes"
             android:title="Default notes"
             android:summary="Comma-separated list of default autocomplete notes available." />
