@@ -11,14 +11,15 @@ import android.text.TextWatcher
 import android.view.MenuItem
 import android.view.View
 import android.widget.AutoCompleteTextView
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import no.ntnuf.gliderlog.R
+import no.ntnuf.gliderlog.common.ColoringUtil
 import no.ntnuf.gliderlog.common.Contact
 import no.ntnuf.gliderlog.common.ContactListManager
 import no.ntnuf.gliderlog.common.FlightEntry
@@ -152,9 +153,11 @@ class NewFlightActivity : AppCompatActivity() {
             applyUpdateValues()
         }
 
-        val fab = findViewById<FloatingActionButton>(R.id.startTowButton)
-        applyFabInsets(fab)
-        fab.setOnClickListener {
+        val saveButton = findViewById<Button>(R.id.startTowButton)
+        ColoringUtil.colorMe(saveButton, resources.getColor(R.color.resumeday_button, theme))
+        saveButton.setTextColor(resources.getColor(R.color.white, theme))
+        applyFabInsets(saveButton)
+        saveButton.setOnClickListener {
             finishWithFlightResult()
         }
     }
@@ -174,7 +177,7 @@ class NewFlightActivity : AppCompatActivity() {
         notesIn.setText(flightToUpdate.notes)
 
         if (flightToUpdate.takeoff != null) {
-            timestampsTitle.text = "Takeoff"
+            timestampsTitle.text = "Takeoff (tap to edit)"
             timestampsTitle.visibility = View.VISIBLE
             takeoffTimeIn.text = FlightEntry.hhcolonmmFromDate(flightToUpdate.takeoff!!)
             takeoffTimeIn.visibility = View.VISIBLE

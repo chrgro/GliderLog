@@ -2,6 +2,7 @@ package no.ntnuf.gliderlog.common
 
 import android.view.View
 import android.view.ViewGroup
+import kotlin.math.max
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -68,12 +69,15 @@ fun applyFabInsets(fab: View) {
 
     ViewCompat.setOnApplyWindowInsetsListener(fab) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+        val bottomInset = max(systemBars.bottom, ime.bottom)
+        val rightInset = max(systemBars.right, ime.right)
         val margins = view.layoutParams as? ViewGroup.MarginLayoutParams
         margins?.setMargins(
             initialLeftMargin + systemBars.left,
             initialTopMargin,
-            initialRightMargin + systemBars.right,
-            initialBottomMargin + systemBars.bottom,
+            initialRightMargin + rightInset,
+            initialBottomMargin + bottomInset,
         )
         if (margins != null) {
             view.layoutParams = margins

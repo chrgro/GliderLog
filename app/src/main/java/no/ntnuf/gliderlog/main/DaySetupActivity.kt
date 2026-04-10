@@ -277,8 +277,8 @@ class DaySetupActivity : AppCompatActivity() {
 
     private fun updateDayActionButtonsVisibility() {
         val hasLogForSelectedDate = foundDaylog
-        resumeDayButton.visibility = if (hasLogForSelectedDate) View.VISIBLE else View.INVISIBLE
-        startDayButton.visibility = if (hasLogForSelectedDate) View.INVISIBLE else View.VISIBLE
+        resumeDayButton.visibility = if (hasLogForSelectedDate) View.VISIBLE else View.GONE
+        startDayButton.visibility = if (hasLogForSelectedDate) View.GONE else View.VISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
