@@ -12,6 +12,10 @@ import java.net.URL
 import kotlin.concurrent.thread
 
 class FikenContactRequestTask {
+    companion object {
+        private const val PAGE_SIZE = 100
+    }
+
     private var context: Context? = null
     private var alertDialog: AlertDialog? = null
     private var contactListManager: ContactListManager? = null
@@ -59,8 +63,7 @@ class FikenContactRequestTask {
         val contacts = FikenContactList()
         var page = 0
         while (page < 999) {
-            val separator = if (baseUrl.contains("?")) "&" else "?"
-            val url = "$baseUrl${separator}pageSize=100&page=$page"
+            val url = buildContactsUrl(baseUrl, page)
             val body = httpGet(url, token) ?: return null
             val pageContacts = JSONArray(body)
             if (pageContacts.length() == 0) {
@@ -70,6 +73,29 @@ class FikenContactRequestTask {
             page += 1
         }
         return contacts
+    }
+
+    private fun buildContactsUrl(baseUrl: String, page: Int): String {
+        val split = baseUrl.split("?", limit = 2)
+        val endpoint = split[0]
+        val existingQuery = split.getOrNull(1).orEmpty()
+
+        val retainedParams = existingQuery
+            .split("&")
+            .filter { it.isNotBlank() }
+            .filterNot {
+                it.startsWith("customer=") ||
+                    it.startsWith("page=") ||
+                    it.startsWith("pageSize=")
+            }
+
+        val params = ArrayList<String>()
+        params.addAll(retainedParams)
+        params.add("customer=true")
+        params.add("pageSize=$PAGE_SIZE")
+        params.add("page=$page")
+
+        return "$endpoint?${params.joinToString("&")}"
     }
 
     private fun httpGet(url: String, token: String): String? {

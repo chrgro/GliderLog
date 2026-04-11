@@ -12,7 +12,12 @@ class FikenContactList : Serializable {
 
     fun addToFikenContactList(jsonContacts: JSONArray): Boolean {
         for (i in 0 until jsonContacts.length()) {
-            val contact = FikenContact.createContact(jsonContacts.getJSONObject(i))
+            val entry = jsonContacts.getJSONObject(i)
+            if (!entry.optBoolean("customer", false)) {
+                continue
+            }
+
+            val contact = FikenContact.createContact(entry)
             contacts.add(contact)
         }
         return true
