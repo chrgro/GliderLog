@@ -432,11 +432,13 @@ class DayOverviewActivity : AppCompatActivity() {
 
     private fun addFlightToTable(flight: FlightEntry, flightNumber: Int): TableRow {
         val row = TableRow(this)
+        val contentTextColor = resources.getColor(R.color.black, theme)
 
         val numberView = TextView(this).apply {
             text = flightNumber.toString()
             textSize = 14f
             setPadding(0, 0, 10, 0)
+            setTextColor(contentTextColor)
         }
         row.addView(numberView)
 
@@ -445,18 +447,21 @@ class DayOverviewActivity : AppCompatActivity() {
             setTypeface(null, Typeface.BOLD)
             textSize = 14f
             setPadding(0, 0, 10, 0)
+            setTextColor(contentTextColor)
         }
 
         val pilotView = TextView(this).apply {
             text = flight.pilot?.name.orEmpty()
             textSize = 14f
             setPadding(0, 0, 10, 0)
+            setTextColor(contentTextColor)
         }
 
         val copilotView = TextView(this).apply {
             text = flight.copilot?.name.orEmpty()
             textSize = 14f
             setPadding(0, 0, 10, 0)
+            setTextColor(contentTextColor)
         }
 
         val notesView = TextView(this).apply {
@@ -464,6 +469,7 @@ class DayOverviewActivity : AppCompatActivity() {
             textSize = 14f
             setPadding(0, 0, 10, 0)
             setTypeface(null, Typeface.ITALIC)
+            setTextColor(contentTextColor)
         }
 
         val regAndButtons = RelativeLayout(this).apply {
@@ -562,12 +568,14 @@ class DayOverviewActivity : AppCompatActivity() {
         statusLayout.addView(TextView(this).apply {
             textSize = 14f
             setPadding(0, 0, 10, 0)
+            setTextColor(contentTextColor)
             text = if (flight.takeoff != null) timeFormat.format(flight.takeoff!!) else getString(R.string.not_departed)
         })
 
         statusLayout.addView(TextView(this).apply {
             textSize = 14f
             setPadding(0, 0, 10, 0)
+            setTextColor(contentTextColor)
             text = when {
                 flight.towRelease != null -> "${timeFormat.format(flight.towRelease!!)} (${flight.getTowDurationStr()})"
                 (flight.status ?: FlightStatus.NOT_DEPARTED) != FlightStatus.NOT_DEPARTED -> getString(R.string.not_released)
@@ -578,6 +586,7 @@ class DayOverviewActivity : AppCompatActivity() {
         statusLayout.addView(TextView(this).apply {
             textSize = 14f
             setPadding(0, 0, 10, 0)
+            setTextColor(contentTextColor)
             text = when {
                 flight.landing != null -> "${timeFormat.format(flight.landing!!)} (${flight.getFlightDurationStr()})"
                 (flight.status ?: FlightStatus.NOT_DEPARTED) != FlightStatus.NOT_DEPARTED -> getString(R.string.not_landed)

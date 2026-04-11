@@ -129,6 +129,7 @@ class DaySummaryActivity : AppCompatActivity() {
 
     private fun addSummaryRow(info: NameRegistrationRole, flightTime: FlightTime): TableRow {
         val row = TableRow(this)
+        val contentTextColor = resources.getColor(R.color.black, theme)
 
         val avatarSeed: String
         val avatarText: String
@@ -142,6 +143,7 @@ class DaySummaryActivity : AppCompatActivity() {
                 text = info.registration
                 typeface = Typeface.DEFAULT_BOLD
                 gravity = Gravity.CENTER_VERTICAL
+                setTextColor(contentTextColor)
             })
             row.addView(planeContainer)
         } else {
@@ -153,6 +155,7 @@ class DaySummaryActivity : AppCompatActivity() {
             personContainer.addView(TextView(this).apply {
                 text = name
                 typeface = Typeface.DEFAULT_BOLD
+                setTextColor(contentTextColor)
             })
 
             val roleRegRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
@@ -167,8 +170,14 @@ class DaySummaryActivity : AppCompatActivity() {
                 lp.gravity = Gravity.CENTER_VERTICAL
                 layoutParams = lp
             }
-            roleRegColumn.addView(TextView(this).apply { text = info.role?.toString() ?: "" })
-            roleRegColumn.addView(TextView(this).apply { text = info.registration })
+            roleRegColumn.addView(TextView(this).apply {
+                text = info.role?.toString() ?: ""
+                setTextColor(contentTextColor)
+            })
+            roleRegColumn.addView(TextView(this).apply {
+                text = info.registration
+                setTextColor(contentTextColor)
+            })
             roleRegRow.addView(roleRegColumn)
 
             personContainer.addView(roleRegRow)
@@ -178,14 +187,32 @@ class DaySummaryActivity : AppCompatActivity() {
         val labels = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         val values = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
 
-        labels.addView(TextView(this).apply { text = if (flightTime.landed) "Flights:" else "Not landed! Flights:" })
-        values.addView(TextView(this).apply { text = flightTime.flights.toString() })
+        labels.addView(TextView(this).apply {
+            text = if (flightTime.landed) "Flights:" else "Not landed! Flights:"
+            setTextColor(contentTextColor)
+        })
+        values.addView(TextView(this).apply {
+            text = flightTime.flights.toString()
+            setTextColor(contentTextColor)
+        })
 
-        labels.addView(TextView(this).apply { text = getString(R.string.summary_label_duration) })
-        values.addView(TextView(this).apply { text = minutesToDurationStr(flightTime.flightMinutes) })
+        labels.addView(TextView(this).apply {
+            text = getString(R.string.summary_label_duration)
+            setTextColor(contentTextColor)
+        })
+        values.addView(TextView(this).apply {
+            text = minutesToDurationStr(flightTime.flightMinutes)
+            setTextColor(contentTextColor)
+        })
 
-        labels.addView(TextView(this).apply { text = getString(R.string.summary_label_tow) })
-        values.addView(TextView(this).apply { text = minutesToDurationStr(flightTime.towMinutes) })
+        labels.addView(TextView(this).apply {
+            text = getString(R.string.summary_label_tow)
+            setTextColor(contentTextColor)
+        })
+        values.addView(TextView(this).apply {
+            text = minutesToDurationStr(flightTime.towMinutes)
+            setTextColor(contentTextColor)
+        })
 
         row.addView(labels)
         row.addView(values)
