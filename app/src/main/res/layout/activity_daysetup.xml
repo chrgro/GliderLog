@@ -110,8 +110,8 @@
             android:id="@+id/resumeDayButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/startDayButton"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:padding="10dp"
             android:text="Resume Day" />
     </RelativeLayout>
