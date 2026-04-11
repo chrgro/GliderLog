@@ -25,6 +25,7 @@ import no.ntnuf.gliderlog.common.Contact
 import no.ntnuf.gliderlog.common.ContactListManager
 import no.ntnuf.gliderlog.common.DayLog
 import no.ntnuf.gliderlog.common.applyContentInsets
+import no.ntnuf.gliderlog.common.applyFabInsets
 import no.ntnuf.gliderlog.common.applyToolbarInsets
 import no.ntnuf.gliderlog.common.enableImmersiveFullscreen
 import no.ntnuf.gliderlog.dayoverview.DayOverviewActivity
@@ -116,6 +117,7 @@ class DaySetupActivity : AppCompatActivity() {
         }
 
         startDayButton = findViewById(R.id.startDayButton)
+        applyFabInsets(startDayButton)
         ColoringUtil.colorMe(startDayButton, resources.getColor(R.color.colorPrimary, theme))
         startDayButton.setTextColor(resources.getColor(R.color.white, theme))
         startDayButton.setOnClickListener {
@@ -145,6 +147,7 @@ class DaySetupActivity : AppCompatActivity() {
         }
 
         resumeDayButton = findViewById(R.id.resumeDayButton)
+        applyFabInsets(resumeDayButton)
         ColoringUtil.colorMe(resumeDayButton, resources.getColor(R.color.resumeday_button, theme))
         resumeDayButton.setTextColor(resources.getColor(R.color.white, theme))
         updateDayActionButtonsVisibility()
