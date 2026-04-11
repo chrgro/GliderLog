@@ -162,7 +162,22 @@ class DaySetupActivity : AppCompatActivity() {
     }
 
     private fun startNewDay() {
-        contactlistmanager.saveContact(headOfOperationsNameIn.text.toString().trim())
+        val headName = headOfOperationsNameIn.text.toString().trim()
+        val airfield = airfieldIn.text.toString().trim()
+
+        if (headName.isEmpty()) {
+            headOfOperationsNameIn.error = "Head of operations is required"
+            headOfOperationsNameIn.requestFocus()
+            return
+        }
+
+        if (airfield.isEmpty()) {
+            airfieldIn.error = "Airfield is required"
+            airfieldIn.requestFocus()
+            return
+        }
+
+        contactlistmanager.saveContact(headName)
         val intent = Intent(this, DayOverviewActivity::class.java)
         val bundle = bundleDayInfo().apply { putSerializable("action", "new") }
         intent.putExtras(bundle)
