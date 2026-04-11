@@ -86,7 +86,7 @@ class DaySetupActivity : AppCompatActivity() {
                 val selected = contactlistmanager.findContactFromName(s.toString())
                 selectedHead = selected
                 if (selected?.hasAccount == true) {
-                    headCheckmark.setImageResource(android.R.drawable.checkbox_on_background)
+                    headCheckmark.setImageResource(R.mipmap.green_checkmark)
                 } else {
                     headCheckmark.setImageDrawable(null)
                 }

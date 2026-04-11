@@ -107,7 +107,7 @@ class NewFlightActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 selectedPilot = contactListManager.findContactFromName(normalizedContactName(s))
                 if (selectedPilot?.hasAccount == true) {
-                    pilotCheckmark.setImageResource(android.R.drawable.checkbox_on_background)
+                    pilotCheckmark.setImageResource(R.mipmap.green_checkmark)
                 } else {
                     pilotCheckmark.setImageDrawable(null)
                 }
@@ -131,7 +131,7 @@ class NewFlightActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 selectedCoPilot = contactListManager.findContactFromName(normalizedContactName(s))
                 if (selectedCoPilot?.hasAccount == true) {
-                    copilotCheckmark.setImageResource(android.R.drawable.checkbox_on_background)
+                    copilotCheckmark.setImageResource(R.mipmap.green_checkmark)
                 } else {
                     copilotCheckmark.setImageDrawable(null)
                 }
