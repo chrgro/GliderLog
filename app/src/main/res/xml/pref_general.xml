@@ -70,7 +70,7 @@
             android:defaultValue="false"
             android:key="fiken_api_enabled"
             android:title="Enable Fiken API usage"
-            android:summary="If enabled, allows loading names and emails from Fiken." />
+            android:summary="If enabled, allows loading names and emails from Fiken. Only contacts of type Customer and that are Active are loaded." />
 
         <EditTextPreference
             android:defaultValue="https://api.fiken.no/api/v2/companies/&lt;companyname&gt;/contacts"

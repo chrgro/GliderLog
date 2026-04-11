@@ -85,6 +85,7 @@ class FikenContactRequestTask {
             .filter { it.isNotBlank() }
             .filterNot {
                 it.startsWith("customer=") ||
+                    it.startsWith("inactive=") ||
                     it.startsWith("page=") ||
                     it.startsWith("pageSize=")
             }
@@ -92,6 +93,7 @@ class FikenContactRequestTask {
         val params = ArrayList<String>()
         params.addAll(retainedParams)
         params.add("customer=true")
+        params.add("inactive=false")
         params.add("pageSize=$PAGE_SIZE")
         params.add("page=$page")
 
@@ -114,4 +116,3 @@ class FikenContactRequestTask {
         }
     }
 }
-
