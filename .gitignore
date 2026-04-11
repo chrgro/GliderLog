@@ -16,3 +16,4 @@ local.properties
 oldgliderlog
 *.properties
 *.jks
+referenceTowLog/**

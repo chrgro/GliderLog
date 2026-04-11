@@ -12,6 +12,22 @@ import java.io.OptionalDataException
 import java.io.StreamCorruptedException
 
 class ContactListManager(private val context: Context) {
+    companion object {
+        private const val ACCOUNT_CHECKMARK_SUFFIX = " \u2713"
+
+        fun toSuggestionLabel(contactName: String, hasAccount: Boolean): String {
+            return if (hasAccount) "$contactName$ACCOUNT_CHECKMARK_SUFFIX" else contactName
+        }
+
+        fun normalizeSuggestionLabel(value: String): String {
+            val trimmed = value.trim()
+            return if (trimmed.endsWith(ACCOUNT_CHECKMARK_SUFFIX)) {
+                trimmed.removeSuffix(ACCOUNT_CHECKMARK_SUFFIX).trimEnd()
+            } else {
+                trimmed
+            }
+        }
+    }
 
     private var contactlist: ContactList = ContactList()
     private val adapter: ArrayAdapter<Contact>
@@ -100,6 +116,13 @@ class ContactListManager(private val context: Context) {
 
     fun getContactNameListAdapter(): ArrayAdapter<Contact> {
         return adapter
+    }
+
+    fun getContactSuggestionListAdapter(): ArrayAdapter<String> {
+        val labels = contactlist.contacts.map {
+            toSuggestionLabel(it.name.orEmpty(), it.hasAccount)
+        }
+        return ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, labels)
     }
 
     fun setFikenContacts(fikenContactList: FikenContactList) {

@@ -65,6 +65,10 @@ class NewFlightActivity : AppCompatActivity() {
 
     private lateinit var settings: SharedPreferences
 
+    private fun normalizedContactName(input: CharSequence?): String {
+        return ContactListManager.normalizeSuggestionLabel(input?.toString().orEmpty())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableImmersiveFullscreen()
@@ -93,10 +97,15 @@ class NewFlightActivity : AppCompatActivity() {
         pilotTypePicIn = findViewById(R.id.radio_pic)
         pilotTypeInstructorIn = findViewById(R.id.radio_instructor)
         pilotCheckmark = findViewById(R.id.pilotNameCheckmark)
-        pilotIn.setAdapter(contactListManager.getContactNameListAdapter())
+        pilotIn.setAdapter(contactListManager.getContactSuggestionListAdapter())
+        pilotIn.setOnItemClickListener { _, _, _, _ ->
+            val normalized = normalizedContactName(pilotIn.text)
+            pilotIn.setText(normalized, false)
+            pilotIn.setSelection(normalized.length)
+        }
         pilotIn.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                selectedPilot = contactListManager.findContactFromName(s.toString())
+                selectedPilot = contactListManager.findContactFromName(normalizedContactName(s))
                 if (selectedPilot?.hasAccount == true) {
                     pilotCheckmark.setImageResource(android.R.drawable.checkbox_on_background)
                 } else {
@@ -112,10 +121,15 @@ class NewFlightActivity : AppCompatActivity() {
         copilotTypeStudentIn = findViewById(R.id.radio_student)
         copilotTypePassengerIn = findViewById(R.id.radio_passenger)
         copilotCheckmark = findViewById(R.id.copilotNameCheckmark)
-        copilotIn.setAdapter(contactListManager.getContactNameListAdapter())
+        copilotIn.setAdapter(contactListManager.getContactSuggestionListAdapter())
+        copilotIn.setOnItemClickListener { _, _, _, _ ->
+            val normalized = normalizedContactName(copilotIn.text)
+            copilotIn.setText(normalized, false)
+            copilotIn.setSelection(normalized.length)
+        }
         copilotIn.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                selectedCoPilot = contactListManager.findContactFromName(s.toString())
+                selectedCoPilot = contactListManager.findContactFromName(normalizedContactName(s))
                 if (selectedCoPilot?.hasAccount == true) {
                     copilotCheckmark.setImageResource(android.R.drawable.checkbox_on_background)
                 } else {
@@ -205,8 +219,8 @@ class NewFlightActivity : AppCompatActivity() {
 
     private fun finishWithFlightResult() {
         val reg = registrationIn.text.toString().trim()
-        val pilotName = pilotIn.text.toString().trim()
-        val copilotName = copilotIn.text.toString().trim()
+        val pilotName = normalizedContactName(pilotIn.text)
+        val copilotName = normalizedContactName(copilotIn.text)
 
         if (pilotName.isBlank() || reg.isBlank()) {
             Toast.makeText(this, "You need a name and a registration", Toast.LENGTH_LONG).show()
