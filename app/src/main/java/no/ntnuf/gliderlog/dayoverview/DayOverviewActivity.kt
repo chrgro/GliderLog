@@ -85,6 +85,8 @@ class DayOverviewActivity : AppCompatActivity() {
         val bundle = savedInstanceState ?: intent.extras ?: Bundle()
         val action = bundle.getSerializable("action") as? String ?: "new"
         val date = bundle.getSerializable("date") as? Date ?: Date()
+        val shouldAutoLoadFikenContacts =
+            action == "new" && savedInstanceState == null && settings.getBoolean("fiken_api_enabled", false)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbardayoverview)
         val formattedDate = SimpleDateFormat("EEEE d/M", Locale.ENGLISH).format(date)
@@ -149,6 +151,10 @@ class DayOverviewActivity : AppCompatActivity() {
             .setTitle("Load Contacts from Fiken")
             .setMessage("Connecting to Fiken...")
             .create()
+
+        if (shouldAutoLoadFikenContacts) {
+            loadFikenContacts()
+        }
     }
 
     override fun onResume() {
@@ -243,12 +249,7 @@ class DayOverviewActivity : AppCompatActivity() {
             }
 
             R.id.menu_loadfikencontacts -> {
-                val fikenRequest = FikenContactRequestTask().apply {
-                    setContext(this@DayOverviewActivity)
-                    setDialog(loadFikenContactsDialog)
-                    setContactListManager(ContactListManager(this@DayOverviewActivity))
-                }
-                fikenRequest.execute()
+                loadFikenContacts()
                 true
             }
 
@@ -278,6 +279,15 @@ class DayOverviewActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun loadFikenContacts() {
+        val fikenRequest = FikenContactRequestTask().apply {
+            setContext(this@DayOverviewActivity)
+            setDialog(loadFikenContactsDialog)
+            setContactListManager(ContactListManager(this@DayOverviewActivity))
+        }
+        fikenRequest.execute()
     }
 
     private fun sendLog() {
