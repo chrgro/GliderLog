@@ -39,7 +39,7 @@ class FikenContactRequestTask {
                     Toast.makeText(ctx, "Failed to load contacts", Toast.LENGTH_LONG).show()
                 } else {
                     contactListManager?.setFikenContacts(result)
-                    Toast.makeText(ctx, "Loaded contacts", Toast.LENGTH_LONG).show()
+                    Toast.makeText(ctx, "Loaded contacts (${result.contacts.size})", Toast.LENGTH_LONG).show()
                 }
                 if (alertDialog?.isShowing == true) {
                     alertDialog?.dismiss()
