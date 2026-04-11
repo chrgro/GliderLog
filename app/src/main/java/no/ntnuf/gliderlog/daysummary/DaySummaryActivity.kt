@@ -49,7 +49,7 @@ class DaySummaryActivity : AppCompatActivity() {
         roundSumsTo = settings.getString("round_sums_to", "5")?.toIntOrNull() ?: 5
 
         val toolbar = findViewById<Toolbar>(R.id.toolbardaysummary)
-        val dateStr = SimpleDateFormat("EEEE d/M", Locale.ENGLISH).format(daylog.date)
+        val dateStr = SimpleDateFormat("EEEE yyyy-MM-dd", Locale.ENGLISH).format(daylog.date)
         toolbar.title = if (summaryType == "pilot") {
             "Pilot Summary  -  $dateStr"
         } else {

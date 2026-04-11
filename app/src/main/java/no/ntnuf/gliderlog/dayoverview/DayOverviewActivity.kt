@@ -89,7 +89,7 @@ class DayOverviewActivity : AppCompatActivity() {
             action == "new" && savedInstanceState == null && settings.getBoolean("fiken_api_enabled", false)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbardayoverview)
-        val formattedDate = SimpleDateFormat("EEEE d/M", Locale.ENGLISH).format(date)
+        val formattedDate = SimpleDateFormat("EEEE yyyy-MM-dd", Locale.ENGLISH).format(date)
         toolbar.title = "Day Log  -  $formattedDate"
         setSupportActionBar(toolbar)
         applyToolbarInsets(toolbar)
