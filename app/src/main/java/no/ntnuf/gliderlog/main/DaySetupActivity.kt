@@ -37,7 +37,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Calendar
-import java.util.Collections
 import java.util.Date
 import java.util.Locale
 
@@ -195,7 +194,7 @@ class DaySetupActivity : AppCompatActivity() {
 
     private fun getFilenameFromListpos(which: Int): String {
         val listOfFiles = filesDir.list()?.toMutableList() ?: mutableListOf()
-        Collections.sort(listOfFiles)
+        listOfFiles.sortDescending()
 
         var c = 0
         for (name in listOfFiles) {
@@ -211,7 +210,7 @@ class DaySetupActivity : AppCompatActivity() {
 
     private fun availableDayLogs(): Array<CharSequence> {
         val listOfFiles = filesDir.list()?.toMutableList() ?: mutableListOf()
-        Collections.sort(listOfFiles)
+        listOfFiles.sortDescending()
 
         val entries = ArrayList<String>()
         val df = SimpleDateFormat("yyyy M d", Locale.ENGLISH)
