@@ -67,7 +67,9 @@ class DayLog : Serializable {
         ret.append(outdf.format(date)).append("\n")
         ret.append("-------\n\n")
 
-        ret.append("Head of Operations:\n  ").append(headOfOperations?.name.orEmpty()).append("\n\n")
+        ret.append("Head of Operations:\n  ")
+            .append(formatContactWithAccount(headOfOperations))
+            .append("\n\n")
         ret.append("Airfield:\n  ").append(airfield.orEmpty()).append("\n\n")
 
         ret.append("Flights\n")
@@ -76,11 +78,11 @@ class DayLog : Serializable {
         var n = 1
         for (flight in flights) {
             ret.append(n).append(". ").append(flight.registration).append("\n")
-            ret.append("   ").append(flight.pilot?.name.orEmpty()).append(" (")
-                .append(flight.pilotType).append(")")
+            ret.append("   ")
+                .append(formatContactWithRoleAndAccount(flight.pilot, flight.pilotType))
             if (flight.copilot != null) {
-                ret.append(", ").append(flight.copilot?.name.orEmpty()).append(" (")
-                    .append(flight.copilotType).append(")")
+                ret.append(", ")
+                    .append(formatContactWithRoleAndAccount(flight.copilot, flight.copilotType))
             }
             ret.append("\n")
 
@@ -140,7 +142,9 @@ class DayLog : Serializable {
         ret.append("<html><head><meta charset=\"UTF-8\"></head><body>")
         ret.append("<h1>Glider Log</h1>")
         ret.append("<h2>").append(outdf.format(date)).append("</h2>")
-        ret.append("<p>Head of Operations:<br/>&nbsp;&nbsp;").append(headOfOperations?.name.orEmpty()).append("</p>")
+        ret.append("<p>Head of Operations:<br/>&nbsp;&nbsp;")
+            .append(formatContactWithAccount(headOfOperations))
+            .append("</p>")
         ret.append("<p>Airfield:<br/>&nbsp;&nbsp;").append(airfield.orEmpty()).append("</p>")
 
         ret.append("<h2>Flights</h2><table border=\"1\" cellspacing=\"0\" cellpadding=\"5\">")
@@ -153,10 +157,10 @@ class DayLog : Serializable {
             ret.append("<tr>")
             ret.append("<td>").append(c).append("</td>")
             ret.append("<td>").append(flight.registration).append("</td>")
-            ret.append("<td>").append(flight.pilot?.name.orEmpty()).append(" (").append(flight.pilotType).append(")</td>")
+            ret.append("<td>").append(formatContactWithRoleAndAccount(flight.pilot, flight.pilotType)).append("</td>")
             ret.append("<td>")
             if (flight.copilot != null) {
-                ret.append(flight.copilot?.name.orEmpty()).append(" (").append(flight.copilotType).append(")")
+                ret.append(formatContactWithRoleAndAccount(flight.copilot, flight.copilotType))
             }
             ret.append("</td>")
             ret.append("<td>").append(formatTime(hourmin, flight.takeoff)).append("</td>")
@@ -230,6 +234,18 @@ class DayLog : Serializable {
                 .put("towDuration", flight.getTowDurationStr())
                 .put("flightDuration", flight.getFlightDurationStr())
                 .put("notes", flight.notes)
+
+            formatCustomerNumber(flight.pilot)?.let {
+                flightObject.put("pilot_customer_number", it)
+            }
+            formatCustomerNumber(flight.copilot)?.let {
+                flightObject.put("copilot_customer_number", it)
+            }
+
+            if (flight.copilot != null) {
+                flightObject.put("copilot", flight.copilot?.name.orEmpty())
+                flightObject.put("copilotRole", flight.copilotType?.toString().orEmpty())
+            }
             flightsArray.put(flightObject)
         }
 
@@ -240,7 +256,11 @@ class DayLog : Serializable {
             .put("sent_times", logSentNumberOfTimes.toString())
             .put("flights", flightsArray)
 
-        return payload.toString()
+        formatCustomerNumber(headOfOperations)?.let {
+            payload.put("headOfOperations_customer_number", it)
+        }
+
+        return payload.toString(2)
     }
 
     private fun formatTime(format: SimpleDateFormat, value: Date?): String {
@@ -251,5 +271,39 @@ class DayLog : Serializable {
         val hours = minutes / 60
         val minutesInHour = minutes % 60
         return "${hours}h ${minutesInHour}m"
+    }
+
+    private fun formatCustomerNumber(contact: Contact?): Int? {
+        if (contact == null || !contact.hasAccount || contact.customerNumber <= 0) {
+            return null
+        }
+        return contact.customerNumber
+    }
+
+    private fun formatContactWithAccount(contact: Contact?): String {
+        if (contact == null) {
+            return ""
+        }
+
+        val customerNumber = formatCustomerNumber(contact)
+        if (customerNumber == null) {
+            return contact.name.orEmpty()
+        }
+
+        return "${contact.name.orEmpty()} (account $customerNumber)"
+    }
+
+    private fun formatContactWithRoleAndAccount(contact: Contact?, role: PilotType?): String {
+        if (contact == null) {
+            return ""
+        }
+
+        val roleLabel = role?.toString().orEmpty()
+        val customerNumber = formatCustomerNumber(contact)
+        if (customerNumber == null) {
+            return "${contact.name.orEmpty()} ($roleLabel)"
+        }
+
+        return "${contact.name.orEmpty()} ($roleLabel, account $customerNumber)"
     }
 }

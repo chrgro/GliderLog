@@ -58,7 +58,7 @@ class FikenContactRequestTask {
 
         val contacts = FikenContactList()
         var page = 0
-        while (page < 250) {
+        while (page < 999) {
             val separator = if (baseUrl.contains("?")) "&" else "?"
             val url = "$baseUrl${separator}pageSize=100&page=$page"
             val body = httpGet(url, token) ?: return null
