@@ -56,6 +56,8 @@ class DaySummaryActivity : AppCompatActivity() {
             "Plane Summary  -  $dateStr"
         }
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
         applyToolbarInsets(toolbar)
         applyContentInsets(findViewById<ScrollView>(R.id.daySummaryScroll))
 
@@ -73,6 +75,11 @@ class DaySummaryActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+
             R.id.menu_return_to_log -> {
                 finish()
                 true

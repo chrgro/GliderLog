@@ -84,6 +84,7 @@ class NewFlightActivity : AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbarnewtow)
         setSupportActionBar(toolbar)
+        supportActionBar?.title = "New Flight"
         applyToolbarInsets(toolbar)
         applyContentInsets(findViewById(R.id.newFlightScroll))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
