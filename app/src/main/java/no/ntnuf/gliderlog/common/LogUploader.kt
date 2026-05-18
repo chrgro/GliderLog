@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.concurrent.thread
+import android.util.Log
 
 class LogUploader(
     private val context: Context,
@@ -35,6 +36,9 @@ class LogUploader(
 
     fun uploadPending() {
         thread {
+            if (pendingUploads.pendingFiles.isEmpty()) {
+                return@thread
+            }
             val completed = arrayListOf<String>()
             for (pendingName in pendingUploads.pendingFiles) {
                 val dayLog = loadDayLog(pendingName) ?: continue
@@ -49,9 +53,9 @@ class LogUploader(
             }
 
             val msg = if (completed.isNotEmpty()) {
-                "Uploaded ${completed.size} pending day logs to webserver"
+                "Uploaded ${completed.size} pending day logs to webserver. Remember to also send via email."
             } else {
-                "No internet connection, will upload day log later"
+                "No internet connection, will upload day log to webserver later. Remember to also send via email."
             }
             android.os.Handler(context.mainLooper).post {
                 Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
